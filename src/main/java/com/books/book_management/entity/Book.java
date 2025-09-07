@@ -8,16 +8,27 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.PastOrPresent;
+import org.springframework.format.annotation.DateTimeFormat;
+// import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDate;
+// import java.time.LocalDateTime;
 
 
 @Entity @Table(name = "books")
 public class Book {
     
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String title;
+
+    @PastOrPresent(message = "Publication date cannot be in the future")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate publicationDate;
 
     @ManyToOne(optional=false, fetch=FetchType.EAGER)
     @JoinColumn(name="author_id")
@@ -25,7 +36,14 @@ public class Book {
 
     public Book() {
     }
+    
+    public LocalDate getPublicationDate() {
+        return this.publicationDate;
+    }
 
+    public void setPublicationDate(LocalDate publicationDate) {
+        this.publicationDate = publicationDate;
+    }
 
     public Long getId() {
         return this.id;

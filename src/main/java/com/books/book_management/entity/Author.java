@@ -13,7 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
-@Entity @Table(name = "authors")
+@Entity
+@Table(name = "authors")
 public class Author {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,9 +1,12 @@
 package com.books.book_management.controller;
 
+// import java.time.LocalDate;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -36,5 +39,17 @@ public class AuthorController {
         authorRepo.save(author);
         return "redirect:/authors";
     }
-}
 
+    @GetMapping("/edit/{id}")
+    public String editForm(@PathVariable Long id, Model model) {
+        Author author = authorRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid author Id:" + id));
+        model.addAttribute("author", author);
+        return "author-form";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        authorRepo.deleteById(id);
+        return "redirect:/authors";
+    }
+}
