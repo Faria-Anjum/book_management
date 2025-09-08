@@ -2,12 +2,12 @@ package com.books.book_management.controller;
 
 import java.time.LocalDate;
 
-import javax.validation.Valid;
+// import javax.validation.Valid;
 
 // import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+// import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,31 +17,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.entity.Book;
-import com.books.book_management.repository.AuthorRepository;
-import com.books.book_management.repository.BookRepository;
+// import com.books.book_management.repository.AuthorRepository;
+// import com.books.book_management.repository.BookRepository;
+import com.books.book_management.service.BookServiceIF;
+import com.books.book_management.service.AuthorServiceIF;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
-    private final BookRepository bookRepo;
-    private final AuthorRepository authorRepo;
+    private final BookServiceIF bookService;
+    private final AuthorServiceIF authorService;
 
-    public BookController(BookRepository bookRepo, AuthorRepository authorRepo) {
-        this.bookRepo = bookRepo;
-        this.authorRepo = authorRepo;
+    public BookController(BookServiceIF bookService, AuthorServiceIF authorService) {
+        this.bookService = bookService;
+        this.authorService = authorService;
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("books", bookRepo.findAll());
+        model.addAttribute("books", bookService.getAllBooks());
         return "books";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("book", new Book());
-        model.addAttribute("authors", authorRepo.findAll());
+        model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("today", LocalDate.now());
         return "book-form";
     }
@@ -54,32 +56,32 @@ public class BookController {
     //     book.setPublicationDate(publicationDate);
     
     @PostMapping
-    public String save(@Valid @ModelAttribute("book") Book book, BindingResult result, Model model, @RequestParam("authorId") Long authorId) {
-        if (result.hasErrors()) {
-            model.addAttribute("authors", authorRepo.findAll());
-            return "book-form";
-        }
+    public String save(@ModelAttribute("book") Book book, Model model, @RequestParam("authorId") Long authorId) {
+        // if (result.hasErrors()) {
+        //     model.addAttribute("authors", authorRepo.findAll());
+        //     return "book-form";
+        // }
 
         // Author author = authorRepo.findById(book.getAuthor().getId()).orElseThrow(() -> new IllegalArgumentException("Invalid author Id"));
-        Author author = authorRepo.findById(authorId).orElseThrow();
+        Author author = authorService.getAuthorById(authorId);
         book.setAuthor(author);
 
-        bookRepo.save(book);
+        bookService.saveBook(book);
         return "redirect:/books";
     }
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
-        Book book = bookRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + id));
+        Book book = bookService.getBookById(id);
         model.addAttribute("book", book);
-        model.addAttribute("authors", authorRepo.findAll());
+        model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("today", LocalDate.now());
         return "book-form";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        bookRepo.deleteById(id);
+        bookService.deleteBook(id);
         return "redirect:/books";
     }
 }

@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.books.book_management.entity.Author;
-import com.books.book_management.repository.AuthorRepository;
+import com.books.book_management.service.AuthorServiceIF;
 
 @Controller
 @RequestMapping("/authors")
 public class AuthorController {
-    private final AuthorRepository authorRepo;
+    private final AuthorServiceIF authorService;
 
-    public AuthorController(AuthorRepository authorRepo){
-        this.authorRepo = authorRepo;
+    public AuthorController(AuthorServiceIF authorService){
+        this.authorService = authorService;
     }
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("authors", authorRepo.findAll());
+        model.addAttribute("authors", authorService.getAllAuthors());
         return "authors";
     }
 
@@ -36,20 +36,20 @@ public class AuthorController {
 
     @PostMapping
     public String save(@ModelAttribute Author author) {
-        authorRepo.save(author);
+        authorService.saveAuthor(author);
         return "redirect:/authors";
     }
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
-        Author author = authorRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid author Id:" + id));
+        Author author = authorService.getAuthorById(id);
         model.addAttribute("author", author);
         return "author-form";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        authorRepo.deleteById(id);
+        authorService.deleteAuthor(id);
         return "redirect:/authors";
     }
 }
