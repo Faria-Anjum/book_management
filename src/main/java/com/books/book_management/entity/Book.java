@@ -34,6 +34,8 @@ public class Book {
     @JoinColumn(name="author_id")
     private Author author;
 
+    private String imagePath;
+
     public Book() {
     }
     
@@ -51,6 +53,14 @@ public class Book {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getImagePath() {
+        return this.imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getTitle() {

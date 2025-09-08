@@ -1,10 +1,16 @@
 package com.books.book_management.controller;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 // import javax.validation.Valid;
 
 // import org.springframework.format.annotation.DateTimeFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 // import org.springframework.validation.BindingResult;
@@ -14,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.entity.Book;
@@ -56,18 +63,34 @@ public class BookController {
     //     book.setPublicationDate(publicationDate);
     
     @PostMapping
-    public String save(@ModelAttribute("book") Book book, Model model, @RequestParam("authorId") Long authorId) {
+    public String save(@ModelAttribute("book") Book book, Model model,
+                        @RequestParam("bookImage") MultipartFile bookImage,
+                        @RequestParam("authorId") Long authorId) throws IOException{
+        
+        if (!bookImage.isEmpty()) {
+            String uploadDir = "src/main/resources/static/images/";
+
+            String fileName = bookImage.getOriginalFilename();
+
+            Path path = Paths.get(uploadDir + fileName);
+            Files.copy(bookImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+            // Save only the filename in DB
+            book.setImagePath(fileName);
+    }
+
+        Author author = authorService.getAuthorById(authorId);
+        book.setAuthor(author);
+
+        bookService.saveBook(book);
+        return "redirect:/books";
+
         // if (result.hasErrors()) {
         //     model.addAttribute("authors", authorRepo.findAll());
         //     return "book-form";
         // }
 
         // Author author = authorRepo.findById(book.getAuthor().getId()).orElseThrow(() -> new IllegalArgumentException("Invalid author Id"));
-        Author author = authorService.getAuthorById(authorId);
-        book.setAuthor(author);
-
-        bookService.saveBook(book);
-        return "redirect:/books";
     }
 
     @GetMapping("/edit/{id}")

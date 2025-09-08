@@ -37,7 +37,7 @@
         </h1>
     </div>
     <div class="container">
-        <form action="/books" method="post">
+        <form action="/books" method="post"  enctype="multipart/form-data">
             <input type="hidden" name="id" value="${book.id}"/>
             <div class="form-group row">
                 <label for="booktitle" class="col-sm-2 col-form-label">Title</label>
@@ -64,6 +64,15 @@
                 </select>
                 </div>
             </div>
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input btn btn-sm btn-dark" role="button" id="bookImage" name="bookImage" accept="image/*">
+                    <label class="custom-file-label" for="bookImage">Choose file</label>
+                </div>
+                <!-- <div class="input-group-append">
+                    <span class="input-group-text btn btn-sm btn-dark" role="button" id="">Upload</span></button>
+                </div> -->
+            </div>
             <!-- <button type="submit">Add</button> -->
             <div class="form-group row d-flex justify-content-center">
                 <button type="submit" class="btn btn-dark">
@@ -75,5 +84,22 @@
             </div>
         </form>
     </div>
+    <script>
+        document.querySelector('#bookImage').addEventListener('change', function(e){
+            var fileName = e.target.files[0].name;
+            e.target.nextElementSibling.innerText = fileName;
+        });
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    
+    <!--<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+    <!-- <script type="application/javascript">
+        $('.custom-file-input').on('change', function() { 
+        let fileName = $(this).val().split('\\').pop(); 
+        $(this).next('.custom-file-label').addClass("selected").html(fileName); 
+        });
+    </script>-->
 </body>
 </html>

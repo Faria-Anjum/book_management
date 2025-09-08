@@ -39,6 +39,7 @@
                 <th scope="col">Author</th>
                 <th scope="col">Edit Book</th>
                 <th scope="col">Delete Book</th>
+                <th scope="col">Cover</th>
             </tr>
             <c:forEach var="book" items="${books}">
                 <tr>
@@ -48,6 +49,11 @@
                     <td>${book.author.name}</td>
                     <td><a class="btn btn-dark btn-sm" role="button" href="/books/edit/${book.id}">Edit</a></td>
                     <td><a class="btn btn-dark btn-sm" role="button" href="/books/delete/${book.id}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a></td>
+                    <td>
+                        <c:if test="${not empty book.imagePath}">
+                            <img class="img-fluid" src="/images/${book.imagePath}" alt="${book.title}" width="50" />
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
