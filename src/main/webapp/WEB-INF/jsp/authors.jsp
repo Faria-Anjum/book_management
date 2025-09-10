@@ -34,28 +34,35 @@
     <div class="container text-center py-2">
         <h1>Authors</h1>
     </div>
-    <div class="container text-center d-flex justify-content-end">
-        <a class="btn btn-dark my-2" href="/authors/new" role="button">Add New Author</a>
-    </div>
-    <div class="container text-center">
-        <table class="table">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Edit Author</th>
-                <th scope="col">Delete Author</th>
-            </tr>
-            <c:forEach var="auth" items="${authors}">
+    <form action="/authors/delete/bulk" method="post">
+        <div class="container text-center my-2 d-flex justify-content-end">
+            <a class="btn btn-dark mr-3" href="/authors/new" role="button">Add New</a>
+            <button type="submit" class="btn btn-dark"
+            onclick="return confirm('Are you sure you want to delete the selected authors?')">Bulk Delete</button>
+        </div>
+        <div class="container text-center">
+            <table class="table">
                 <tr>
-                    <td>${auth.id}</td>
-                    <td>${auth.name}</td>
-                    <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/${auth.id}">Edit</a></td>
-                    <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/${auth.id}" onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
+                    <th scope="col"></th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Edit Author</th>
+                    <th scope="col">Delete Author</th>
                 </tr>
-            </c:forEach>
-        </table>
+                <c:forEach var="auth" items="${authors}">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="authorIds" value="${auth.id}">
+                        </td>
+                        <td>${auth.id}</td>
+                        <td>${auth.name}</td>
+                        <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/${auth.id}">Edit</a></td>
+                        <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/${auth.id}" onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </form>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>

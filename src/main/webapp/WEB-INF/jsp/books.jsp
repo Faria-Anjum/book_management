@@ -33,36 +33,47 @@
     <div class="container text-center py-2">
         <h1>Books</h1>
     </div>
-    <div class="container text-center my-2 d-flex justify-content-end">
-        <a class="btn btn-dark" href="/books/new" role="button">Add New Book</a>
-    </div>
-    <div class="container text-center">
-        <table class="table">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Title</th>
-                <th scope="col">Publication Date</th>
-                <th scope="col">Author</th>
-                <th scope="col">Edit Book</th>
-                <th scope="col">Delete Book</th>
-                <th scope="col">Cover</th>
-            </tr>
-            <c:forEach var="book" items="${books}">
+    <form action="/books/delete/bulk" method="post">
+        <div class="container text-center my-2 d-flex justify-content-end">
+            <a class="btn btn-dark mr-3" href="/books/new" role="button">Add New</a>
+            <button type="submit" class="btn btn-dark"
+            onclick="return confirm('Are you sure you want to delete the selected books?')">Bulk Delete</button>
+        </div>
+        <div class="container text-center">
+            <table class="table">
                 <tr>
-                    <td>${book.id}</td>
-                    <td>${book.title}</td>
-                    <td>${book.publicationDate}</td>
-                    <td>${book.author.name}</td>
-                    <td><a class="btn btn-dark btn-sm" role="button" href="/books/edit/${book.id}">Edit</a></td>
-                    <td><a class="btn btn-dark btn-sm" role="button" href="/books/delete/${book.id}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a></td>
-                    <td>
-                        <c:if test="${not empty book.imagePath}">
-                            <img class="img-fluid" src="/images/${book.imagePath}" alt="${book.title}" width="50" />
-                        </c:if>
-                    </td>
+                    <th scope="col"></th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Publication Date</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Edit Book</th>
+                    <th scope="col">Delete Book</th>
+                    <th scope="col">Cover</th>
                 </tr>
-            </c:forEach>
-        </table>
+                <c:forEach var="book" items="${books}">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="bookIds" value="${book.id}">
+                        </td>
+                        <td>${book.id}</td>
+                        <td>${book.title}</td>
+                        <td>${book.publicationDate}</td>
+                        <td>${book.author.name}</td>
+                        <td><a class="btn btn-dark btn-sm" role="button" href="/books/edit/${book.id}">Edit</a></td>
+                        <td>
+                            <a class="btn btn-dark btn-sm" role="button" href="/books/delete/${book.id}"
+                                onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                        </td>
+                        <td>
+                            <c:if test="${not empty book.imagePath}">
+                                <img class="img-fluid" src="/images/${book.imagePath}" alt="${book.title}" width="50" />
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

@@ -39,4 +39,9 @@ public class BookServiceImpl implements BookServiceIF{
     public List<Book> getAllBooksByTitleOrAuthor(String keyword){
         return bookRepo.findByTitleOrAuthorContaining(keyword);
     }
+
+    @Override
+    public void bulkDeleteBooks(List<Long> ids){
+        bookRepo.deleteAllById(ids);
+    }
 }

@@ -40,4 +40,8 @@ public class AuthorServiceImpl implements AuthorServiceIF{
         return authorRepo.findByNameContaining(keyword);
     }
 
+    @Override
+    public void bulkDeleteAuthors(List<Long> ids){
+        authorRepo.deleteAllById(ids);
+    }
 }

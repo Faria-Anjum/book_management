@@ -10,4 +10,5 @@ public interface BookServiceIF {
     Book saveBook(Book book);
     void deleteBook(Long id);
     List<Book> getAllBooksByTitleOrAuthor(String keyword);
+    void bulkDeleteBooks(List<Long> ids);
 }

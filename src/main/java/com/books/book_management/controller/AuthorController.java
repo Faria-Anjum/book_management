@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.books.book_management.entity.Author;
 import com.books.book_management.service.AuthorServiceIF;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/authors")
 public class AuthorController {
@@ -37,7 +39,7 @@ public class AuthorController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("author", new Author());
-        return "author-form";
+        return "author_form";
     }
 
     @PostMapping
@@ -50,12 +52,18 @@ public class AuthorController {
     public String editForm(@PathVariable Long id, Model model) {
         Author author = authorService.getAuthorById(id);
         model.addAttribute("author", author);
-        return "author-form";
+        return "author_form";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         authorService.deleteAuthor(id);
         return "redirect:/authors";
+    }
+
+    @PostMapping("/delete/bulk")
+    public String bulkDelete(@RequestParam("authorIds") List<Long> ids) {
+        authorService.bulkDeleteAuthors(ids);
+        return "redirect:/authors"; 
     }
 }

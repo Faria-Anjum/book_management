@@ -9,4 +9,5 @@ public interface AuthorServiceIF {
     Author saveAuthor(Author author);
     void deleteAuthor(Long id);
     List<Author> getAllAuthorsByName(String keyword);
+    void bulkDeleteAuthors(List<Long> ids);
 }
