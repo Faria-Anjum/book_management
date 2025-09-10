@@ -34,4 +34,9 @@ public class BookServiceImpl implements BookServiceIF{
     public void deleteBook(Long id){
         bookRepo.deleteById(id);
     }
+
+    @Override
+    public List<Book> getAllBooksByTitleOrAuthor(String keyword){
+        return bookRepo.findByTitleOrAuthorContaining(keyword);
+    }
 }

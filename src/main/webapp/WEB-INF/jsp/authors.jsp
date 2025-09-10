@@ -11,19 +11,25 @@
     <title>Author List</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Book Management</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link" href="/books">Books</a>
-                <a class="nav-link active" aria-current="page" href="#" href="/authors">Authors</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Book Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="/books">Books</a>
+                    <a class="nav-link active" aria-current="page" href="#" href="/authors">Authors</a>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="container-fluid">
+            <form class="form-inline" method="get">
+                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search">
+                <button class="btn btn-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>   
     </nav>
     <div class="container text-center py-2">
         <h1>Authors</h1>

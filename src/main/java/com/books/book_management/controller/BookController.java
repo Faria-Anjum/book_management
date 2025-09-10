@@ -42,8 +42,13 @@ public class BookController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+    public String list(Model model, @RequestParam(value="keyword", required = false) String keyword) {
+        if (keyword==null || keyword.isEmpty()){
+            model.addAttribute("books", bookService.getAllBooks());
+        }
+        else{
+            model.addAttribute("books", bookService.getAllBooksByTitleOrAuthor(keyword));
+        }
         return "books";
     }
 
@@ -52,7 +57,7 @@ public class BookController {
         model.addAttribute("book", new Book());
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("today", LocalDate.now());
-        return "book-form";
+        return "book_form";
     }
 
     // postmapping
@@ -99,7 +104,7 @@ public class BookController {
         model.addAttribute("book", book);
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("today", LocalDate.now());
-        return "book-form";
+        return "book_form";
     }
 
     @GetMapping("/delete/{id}")

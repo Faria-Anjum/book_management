@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.service.AuthorServiceIF;
@@ -23,8 +24,13 @@ public class AuthorController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("authors", authorService.getAllAuthors());
+    public String list(Model model, @RequestParam(value="keyword", required=false) String keyword) {
+        if (keyword==null || keyword.isEmpty()){
+            model.addAttribute("authors", authorService.getAllAuthors());
+        }
+        else{
+            model.addAttribute("authors", authorService.getAllAuthorsByName(keyword));
+        }
         return "authors";
     }
 

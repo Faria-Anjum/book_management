@@ -8,4 +8,5 @@ public interface AuthorServiceIF {
     Author getAuthorById(Long id);
     Author saveAuthor(Author author);
     void deleteAuthor(Long id);
+    List<Author> getAllAuthorsByName(String keyword);
 }

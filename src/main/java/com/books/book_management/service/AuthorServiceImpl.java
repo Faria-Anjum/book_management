@@ -35,4 +35,9 @@ public class AuthorServiceImpl implements AuthorServiceIF{
         authorRepo.deleteById(id);
     }
 
+    @Override
+    public List<Author> getAllAuthorsByName(String keyword){
+        return authorRepo.findByNameContaining(keyword);
+    }
+
 }
