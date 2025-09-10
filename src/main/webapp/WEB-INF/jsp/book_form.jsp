@@ -51,22 +51,24 @@
                 <input type="date" max="${today}" name="publicationDate" class="form-control" id="pubDate" placeholder="Publication Date" value="${book.publicationDate}" required>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="authorId" class="col-sm-2 col-form-label">Author</label>
-                <div class="col-sm-10">
-                <select class="custom-select mr-sm-2" id="authorId" name="id" required>
-                    <c:forEach var="auth" items="${authors}">
-                        <option value="${auth.id}">
-                            <!-- ${auth.name} -->
-                                <c:if test="${book.author != null && book.author.id == auth.id}">(Current) </c:if>${auth.name}
-                        </option>
-                    </c:forEach>
-                </select>
+                <div class="form-group row">
+                    <label for="authorId" class="col-sm-2 col-form-label">Author</label>
+                    <div class="col-sm-10">
+                    <select class="custom-select mr-sm-2" id="authorId" name="authorId" required>
+                        <c:forEach var="auth" items="${authors}">
+                            <option value="${auth.id}"
+                                    <c:if test="${book.author != null && book.author.id == auth.id}">
+                                        selected
+                                    </c:if>>
+                                    ${auth.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    </div>
                 </div>
-            </div>
             <div class="input-group mb-3">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input btn btn-sm btn-dark" role="button" id="bookImage" name="bookImage" accept="image/*">
+                    <input type="file" value="${book.imagePath}" class="custom-file-input btn btn-sm btn-dark" role="button" id="bookImage" name="bookImage" accept="image/*">
                     <label class="custom-file-label" for="bookImage">Choose file</label>
                 </div>
                 <!-- <div class="input-group-append">

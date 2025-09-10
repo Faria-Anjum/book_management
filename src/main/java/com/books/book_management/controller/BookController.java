@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 // import javax.validation.Valid;
 
@@ -74,15 +75,23 @@ public class BookController {
         
         if (!bookImage.isEmpty()) {
             String uploadDir = "src/main/resources/static/images/";
-
             String fileName = bookImage.getOriginalFilename();
-
             Path path = Paths.get(uploadDir + fileName);
             Files.copy(bookImage.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
             // Save only the filename in DB
             book.setImagePath(fileName);
-    }
+        }
+        else{
+            if(book.getId()!=null){
+                Book current = bookService.getBookById(book.getId());
+                if (current != null) {
+                    book.setImagePath(current.getImagePath());
+            }
+            }
+            // Optional<Book> current = bookService.getBookById(book.getId());
+            // current.ifPresent(existing -> book.setImagePath(existing.getImagePath()));
+        }
 
         Author author = authorService.getAuthorById(authorId);
         book.setAuthor(author);
