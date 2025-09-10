@@ -1,4 +1,6 @@
 package com.books.book_management.service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.books.book_management.repository.BookRepository;
@@ -16,8 +18,8 @@ public class BookServiceImpl implements BookServiceIF{
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepo.findAll();
+    public Page<Book> getAllBooks(Pageable pageable) {
+        return bookRepo.findAll(pageable);
     }
 
     @Override
@@ -36,8 +38,8 @@ public class BookServiceImpl implements BookServiceIF{
     }
 
     @Override
-    public List<Book> getAllBooksByTitleOrAuthor(String keyword){
-        return bookRepo.findByTitleOrAuthorContaining(keyword);
+    public Page<Book> getAllBooksByTitleOrAuthor(Pageable pageable, String keyword){
+        return bookRepo.findByTitleOrAuthorContaining(pageable, keyword);
     }
 
     @Override

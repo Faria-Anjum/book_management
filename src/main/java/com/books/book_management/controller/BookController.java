@@ -25,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.entity.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 // import com.books.book_management.repository.AuthorRepository;
 // import com.books.book_management.repository.BookRepository;
 import com.books.book_management.service.BookServiceIF;
@@ -43,13 +46,21 @@ public class BookController {
     }
 
     @GetMapping
-    public String list(Model model, @RequestParam(value="keyword", required = false) String keyword) {
+    public String list(Model model,
+                    @RequestParam(value="keyword", required = false) String keyword,
+                    @RequestParam(defaultValue = "1") int page,
+                    @RequestParam(defaultValue = "5") int items) {
+
+        Page<Book> booklistPage;
+
         if (keyword==null || keyword.isEmpty()){
-            model.addAttribute("books", bookService.getAllBooks());
+            booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
         }
         else{
-            model.addAttribute("books", bookService.getAllBooksByTitleOrAuthor(keyword));
+            booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
         }
+        model.addAttribute("booklistPage", booklistPage);
+        
         return "books";
     }
 

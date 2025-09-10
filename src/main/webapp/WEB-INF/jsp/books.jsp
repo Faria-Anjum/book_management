@@ -51,7 +51,7 @@
                     <th scope="col">Delete Book</th>
                     <th scope="col">Cover</th>
                 </tr>
-                <c:forEach var="book" items="${books}">
+                <c:forEach var="book" items="${booklistPage.content}">
                     <tr>
                         <td>
                             <input type="checkbox" name="bookIds" value="${book.id}">
@@ -74,6 +74,15 @@
                 </c:forEach>
             </table>
         </form>
+        <div class="pagination justify-content-center">
+            <c:if test="${!booklistPage.first}">
+                <a href="?page=${booklistPage.number - 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark">Previous</a>
+            </c:if>
+                Page ${booklistPage.number+1} of ${booklistPage.totalPages}
+            <c:if test="${!booklistPage.last}">
+                <a href="?page=${booklistPage.number + 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark">Next</a>
+            </c:if>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

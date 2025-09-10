@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 // import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.util.List;
+// import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import com.books.book_management.entity.Book;
 
@@ -14,7 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long>{
     @Query
     ("select b from Book b where lower(b.title) like lower(concat('%',:keyword,'%'))" +
                             " or lower(b.author.name) like lower(concat('%',:keyword,'%'))")
-    List<Book> findByTitleOrAuthorContaining(String keyword);
+    Page<Book> findByTitleOrAuthorContaining(Pageable pageable, String keyword);
 
     // @Query
     // ("select b from Book b where lower(b.title) like lower(concat('%')+ :keyword +('%'))")
