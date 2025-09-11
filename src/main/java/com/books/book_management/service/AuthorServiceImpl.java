@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.books.book_management.repository.AuthorRepository;
 import com.books.book_management.entity.Author;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Service
 public class AuthorServiceImpl implements AuthorServiceIF{
@@ -18,6 +20,11 @@ public class AuthorServiceImpl implements AuthorServiceIF{
     @Override
     public List<Author> getAllAuthors(){
         return authorRepo.findAll();
+    };
+
+    @Override
+    public Page<Author> getAllAuthors(Pageable pageable){
+        return authorRepo.findAll(pageable);
     };
 
     @Override
@@ -36,8 +43,8 @@ public class AuthorServiceImpl implements AuthorServiceIF{
     }
 
     @Override
-    public List<Author> getAllAuthorsByName(String keyword){
-        return authorRepo.findByNameContaining(keyword);
+    public Page<Author> getAllAuthorsByName(Pageable pageable, String keyword){
+        return authorRepo.findByNameContaining(pageable, keyword);
     }
 
     @Override

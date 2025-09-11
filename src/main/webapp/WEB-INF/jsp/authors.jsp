@@ -49,7 +49,7 @@
                     <th scope="col">Edit Author</th>
                     <th scope="col">Delete Author</th>
                 </tr>
-                <c:forEach var="auth" items="${authors}">
+                <c:forEach var="auth" items="${authorlistPage.content}">
                     <tr>
                         <td>
                             <input type="checkbox" name="authorIds" value="${auth.id}">
@@ -62,6 +62,15 @@
                 </c:forEach>
             </table>
         </form>
+        <div class="pagination justify-content-center">
+            <c:if test="${!authorlistPage.first}">
+                <a href="?page=${authorlistPage.number - 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
+            </c:if>
+                Page ${authorlistPage.number+1} of ${authorlistPage.totalPages}
+            <c:if test="${!authorlistPage.last}">
+                <a href="?page=${authorlistPage.number + 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
+            </c:if>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>

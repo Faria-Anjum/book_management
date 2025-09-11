@@ -7,14 +7,10 @@ import java.time.LocalDate;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-
-// import javax.validation.Valid;
-
-// import org.springframework.format.annotation.DateTimeFormat;
+// valid
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-// import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +23,7 @@ import com.books.book_management.entity.Author;
 import com.books.book_management.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.Pageable;
 
 // import com.books.book_management.repository.AuthorRepository;
 // import com.books.book_management.repository.BookRepository;
@@ -48,7 +45,7 @@ public class BookController {
     @GetMapping
     public String list(Model model,
                     @RequestParam(value="keyword", required = false) String keyword,
-                    @RequestParam(defaultValue = "1") int page,
+                    @RequestParam(defaultValue = "0") int page,
                     @RequestParam(defaultValue = "5") int items) {
 
         Page<Book> booklistPage;

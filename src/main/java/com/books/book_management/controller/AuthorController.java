@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.service.AuthorServiceIF;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -26,13 +28,21 @@ public class AuthorController {
     }
 
     @GetMapping
-    public String list(Model model, @RequestParam(value="keyword", required=false) String keyword) {
+    public String list(Model model,
+                        @RequestParam(value="keyword", required=false) String keyword,
+                        @RequestParam(defaultValue = "0") int page,
+                        @RequestParam(defaultValue = "5") int items) {
+
+        Page<Author> authorlistPage;
+        
         if (keyword==null || keyword.isEmpty()){
-            model.addAttribute("authors", authorService.getAllAuthors());
+            authorlistPage = authorService.getAllAuthors(PageRequest.of(page, items));
         }
         else{
-            model.addAttribute("authors", authorService.getAllAuthorsByName(keyword));
+            authorlistPage = authorService.getAllAuthorsByName(PageRequest.of(page, items), keyword);
         }
+        model.addAttribute("authorlistPage", authorlistPage);
+
         return "authors";
     }
 

@@ -76,11 +76,11 @@
         </form>
         <div class="pagination justify-content-center">
             <c:if test="${!booklistPage.first}">
-                <a href="?page=${booklistPage.number - 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark">Previous</a>
+                <a href="?page=${booklistPage.number - 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
             </c:if>
-                Page ${booklistPage.number+1} of ${booklistPage.totalPages}
+                <p>Page ${booklistPage.number+1} of ${booklistPage.totalPages}</p>
             <c:if test="${!booklistPage.last}">
-                <a href="?page=${booklistPage.number + 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark">Next</a>
+                <a href="?page=${booklistPage.number + 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
             </c:if>
         </div>
     </div>
