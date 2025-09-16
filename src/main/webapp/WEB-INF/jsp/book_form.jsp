@@ -27,17 +27,17 @@
     <div class="container text-center py-2">
         <h1>
             <c:choose>
-            <c:when test="${book.id != null}">
-                Update Book
-            </c:when>
-            <c:otherwise>
-                New Book
-            </c:otherwise>
-        </c:choose>
+                <c:when test="${book.id != null}">
+                    Update Book
+                </c:when>
+                <c:otherwise>
+                    New Book
+                </c:otherwise>
+            </c:choose>
         </h1>
     </div>
     <div class="container">
-        <form action="/books" method="post"  enctype="multipart/form-data">
+        <form action="/books" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" value="${book.id}"/>
             <div class="form-group row">
                 <label for="booktitle" class="col-sm-2 col-form-label">Title</label>
@@ -57,9 +57,9 @@
                     <select class="custom-select mr-sm-2" id="authorId" name="authorId" required>
                         <c:forEach var="auth" items="${authors}">
                             <option value="${auth.id}"
-                                    <c:if test="${book.author != null && book.author.id == auth.id}">
-                                        selected
-                                    </c:if>>
+                                <c:if test="${book.author != null && book.author.id == auth.id}">
+                                    selected
+                                </c:if>>
                                     ${auth.name}
                             </option>
                         </c:forEach>

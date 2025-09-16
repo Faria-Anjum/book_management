@@ -25,7 +25,7 @@
         </div>
         <div class="container-fluid">
             <form class="form-inline" method="get">
-                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Title or Author" aria-label="Search">
+                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Title or Author" aria-label="Search" value="${keyword}">
                 <button class="btn btn-light my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>   
@@ -78,7 +78,7 @@
             <c:if test="${!booklistPage.first}">
                 <a href="?page=${booklistPage.number - 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
             </c:if>
-                <p>Page ${booklistPage.number+1} of ${booklistPage.totalPages}</p>
+                Page ${booklistPage.number+1} of ${booklistPage.totalPages}
             <c:if test="${!booklistPage.last}">
                 <a href="?page=${booklistPage.number + 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
             </c:if>

@@ -26,7 +26,7 @@
         </div>
         <div class="container-fluid">
             <form class="form-inline" method="get">
-                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search">
+                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search" value="${keyword}">
                 <button class="btn btn-light my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>   

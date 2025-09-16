@@ -42,6 +42,7 @@ public class AuthorController {
             authorlistPage = authorService.getAllAuthorsByName(PageRequest.of(page, items), keyword);
         }
         model.addAttribute("authorlistPage", authorlistPage);
+        model.addAttribute("keyword", keyword);
 
         return "authors";
     }

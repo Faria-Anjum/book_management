@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.books.book_management.entity.Author;
@@ -37,7 +38,7 @@ public class BookController {
     private final BookServiceIF bookService;
     private final AuthorServiceIF authorService;
 
-    public BookController(BookServiceIF bookService, AuthorServiceIF authorService) {
+    public BookController(BookServiceIF bookService, AuthorServiceIF authorService) { //dependency injection
         this.bookService = bookService;
         this.authorService = authorService;
     }
@@ -57,6 +58,7 @@ public class BookController {
             booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
         }
         model.addAttribute("booklistPage", booklistPage);
+        model.addAttribute("keyword", keyword);
         
         return "books";
     }

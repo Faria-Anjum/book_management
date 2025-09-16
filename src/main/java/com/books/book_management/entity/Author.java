@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "authors")
@@ -25,6 +27,7 @@ public class Author {
     private String name;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Book> books = new ArrayList<>();
 
     public Author(){

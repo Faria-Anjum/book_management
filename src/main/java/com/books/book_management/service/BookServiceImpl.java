@@ -9,7 +9,7 @@ import com.books.book_management.entity.Book;
 import java.util.List;
 
 @Service
-public class BookServiceImpl implements BookServiceIF{
+public class BookServiceImpl implements BookServiceIF{  //dependency injection
     private final BookRepository bookRepo;
 
 
