@@ -55,8 +55,8 @@ public class AuthorRestController {
         return ResponseEntity.ok(newAuthor);
     }
 
-    @GetMapping("/edit/{id}")
-    public ResponseEntity<Author> editForm(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Author> viewAuthor(@PathVariable Long id) {
         Author author = authorService.getAuthorById(id);
         return ResponseEntity.ok(author);
     }

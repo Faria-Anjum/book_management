@@ -12,12 +12,16 @@ import javax.validation.constraints.PastOrPresent;
 import org.springframework.format.annotation.DateTimeFormat;
 // import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 // import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "books")
+@Data
+@NoArgsConstructor
 public class Book {
     
     @Id
@@ -36,47 +40,4 @@ public class Book {
     private Author author;
 
     private String imagePath;
-
-    public Book() {
-    }
-    
-    public LocalDate getPublicationDate() {
-        return this.publicationDate;
-    }
-
-    public void setPublicationDate(LocalDate publicationDate) {
-        this.publicationDate = publicationDate;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getImagePath() {
-        return this.imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Author getAuthor() {
-        return this.author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
-    }
 }
