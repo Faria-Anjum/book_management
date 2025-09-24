@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.books.book_management.entity.Author;
@@ -41,16 +44,10 @@ public class AuthorRestController {
         }
 
         return ResponseEntity.ok(authorlistPage);
-    } 
-
-    @GetMapping("/new")
-    public ResponseEntity<Author> form() {
-        Author author = new Author();
-        return ResponseEntity.ok(author);
     }
 
     @PostMapping
-    public ResponseEntity<Author> save(Author author) {
+    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
         Author newAuthor = authorService.saveAuthor(author);
         return ResponseEntity.ok(newAuthor);
     }
@@ -61,19 +58,16 @@ public class AuthorRestController {
         return ResponseEntity.ok(author);
     }
 
-    @GetMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable Long id) {
         authorService.deleteAuthor(id);
-        String response = String.format("Author with %d has been deleted.", id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/delete/bulk")
+    @DeleteMapping("/bulk")
     public ResponseEntity<String> bulkDelete(@RequestParam("authorIds") List<Long> ids) {
         authorService.bulkDeleteAuthors(ids);
-        String idList = ids.toString();
-        String response = String.format("Book with IDs %s has been deleted.", idList);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -1,5 +1,4 @@
-
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,12 +50,33 @@
                     <th scope="col">Delete Book</th>
                     <th scope="col">Cover</th>
                 </tr>
-                <thead id="bookTableRows">
+                <tbody id="bookTableRows">
 
-                </thead>
+                </tbody>
+                <!-- <c:forEach var="book" items="${booklistPage.content}">
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="bookIds" value="${book.id}">
+                        </td>
+                        <td>${book.id}</td>
+                        <td>${book.title}</td>
+                        <td>${book.publicationDate}</td>
+                        <td>${book.author.name}</td>
+                        <td><a class="btn btn-dark btn-sm" role="button" href="/books/edit/${book.id}">Edit</a></td>
+                        <td>
+                            <a class="btn btn-dark btn-sm" role="button" href="/books/delete/${book.id}"
+                                onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                        </td>
+                        <td>
+                            <c:if test="${not empty book.imagePath}">
+                                <img class="img-fluid" src="/images/${book.imagePath}" alt="${book.title}" width="50" />
+                            </c:if>
+                        </td>
+                    </tr>
+                </c:forEach> -->
             </table>
         </form>
-        <div class="pagination justify-content-center mt-3">
+        <div class="pagination justify-content-center mt-3" id="pagination">
             <!-- <c:if test="${!booklistPage.first}">
                 <a href="?page=${booklistPage.number - 1}&size=${booklistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
             </c:if>
@@ -66,65 +86,67 @@
             </c:if> -->
         </div>
     </div>
+    <script>
+        let currentPage = 0;
+        let pageSize = 5;
+        let currentKeyword = "";
+
+        function loadBooks(page = 0, keyword = '') {
+            const url = `/api/books?page=\${page}&size=\${pageSize}` +
+                (keyword ? `&keyword=\${keyword}` : "");
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('bookTableRows');
+                    tbody.innerHTML = '';
+
+                    data.content.forEach(book => {
+                        const row = `
+                            <tr>
+                            <td>
+                                <input type="checkbox" name="bookIds" value="\${book.id}">
+                            </td>
+                            <td>\${book.id}</td>
+                            <td>\${book.title}</td>
+                            <td>\${book.publicationDate}</td>
+                            <td>\${book.author.name}</td>
+                            <td><a class="btn btn-dark btn-sm" role="button" href="/books/edit/\${book.id}">Edit</a></td>
+                            <td>
+                                <a class="btn btn-dark btn-sm" role="button" href="/books/delete/\${book.id}"
+                                    onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                            </td>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+
+                    // pagination
+                    const pagination = document.getElementById('pagination');
+                    pagination.innerHTML = '';
+
+                    if (!data.first) {
+                        pagination.innerHTML += `
+                            <button class="btn btn-dark btn-sm mr-3" onclick="loadBooks(\${data.number - 1}, '\${keyword}')">
+                                Previous
+                            </button>`;
+                    }
+
+                    pagination.innerHTML += ` Page \${data.number + 1} of \${data.totalPages} `;
+
+                    if (!data.last) {
+                        pagination.innerHTML += `
+                            <button class="btn btn-dark btn-sm ml-3" onclick="loadBooks(\${data.number + 1}, '\${keyword}')">
+                                Next
+                            </button>`;
+                    }
+                })
+                .catch(error => console.error('Error fetching books:', error));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadBooks();
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-    </body>
+</body>
 </html>
-
-<script>
-    let currentPage = 0;
-    let pageSize = 5;
-    let currentKeyword = "";
-
-    // function loadBooks(page=0, keyword=''){
-    //     const url = `/api/books?page=${page}&size=${pageSize}` + 
-    //                 (keyword ? `&keyword=${encodeURIComponent(keyword)}` : "");
-
-        fetch('api/books')
-            .then(response => response.json())
-            .then(data => {
-                const tbody = document.getElementById('bookTableRows');
-                tbody.innerHTML='';
-
-                data.content.forEach(book => {
-                    const row = `
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="bookIds" value="\${book.id}">
-                        </td>
-                        <td>\${book.id}</td>
-                        <td>\${book.title}</td>
-                        <td>\${book.publicationDate}</td>
-                        <td>\${book.author.name}</td>
-                        <td>
-                            <a class="btn btn-dark btn-sm" role="button" href="/books/edit/\${book.id}">Edit</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-dark btn-sm" role="button" href="/books/delete/\${book.id}"
-                                onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
-                        </td>
-                        
-                    </tr>`;
-                tbody.innerHTML += row;
-                });
-
-                // const pages = document.getElementById('pagination');
-                // pages.innerHTML="";
-
-                // for(let i = 0; i<data.totalPages; i++){
-
-                //     if (!data.first){
-                //         pagination.innerHTML += `
-                //         <button class="btn btn-dark btn-sm mr-3" onclick="loadBooks(${data.number - 1}, keyword)">
-                //             Previous
-                //         </button>`;
-                //     }
-
-                //     else{
-                //         pages.innerHTML+= `
-                //         <button class="btn btn-dark btn-sm mr-3" disabled>Previous</button>
-                //         `;
-                //     }
-                
-            })
-        // .catch(error => console.error('Error fetching books:', error));
-</script>

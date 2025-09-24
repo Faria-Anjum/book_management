@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Author List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
@@ -25,8 +26,8 @@
             </div>
         </div>
         <div class="container-fluid">
-            <form class="form-inline" method="get">
-                <input name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search" value="${keyword}">
+            <form id=searchBar class="form-inline">
+                <input id="keyword" name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search">
                 <button class="btn btn-light my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>   
@@ -34,14 +35,14 @@
     <div class="container text-center py-2">
         <h1>Authors</h1>
     </div>
-    <form action="/authors/delete/bulk" method="post">
-        <div class="container text-center my-2 d-flex justify-content-end">
-            <a class="btn btn-dark mr-3" href="/authors/new" role="button">Add New</a>
-            <button type="submit" class="btn btn-dark"
-            onclick="return confirm('Are you sure you want to delete the selected authors?')">Bulk Delete</button>
-        </div>
-        <div class="container text-center">
-            <table class="table">
+    <div class="container text-center my-2 d-flex justify-content-end">
+        <a class="btn btn-dark mr-3" href="/authors/new" role="button">Add New</a>
+        <button id="bulkDeleteButton" class="btn btn-dark"
+        onclick="return confirm('Are you sure you want to delete the selected authors?')">Bulk Delete</button>
+    </div>
+    <div class="container text-center">
+        <table class="table">
+            <thead>
                 <tr>
                     <th scope="col"></th>
                     <th scope="col">ID</th>
@@ -49,7 +50,9 @@
                     <th scope="col">Edit Author</th>
                     <th scope="col">Delete Author</th>
                 </tr>
-                <c:forEach var="auth" items="${authorlistPage.content}">
+            </thead>
+            <tbody id="authorTableRows">
+                <!-- <c:forEach var="auth" items="${authorlistPage.content}">
                     <tr>
                         <td>
                             <input type="checkbox" name="authorIds" value="${auth.id}">
@@ -59,19 +62,92 @@
                         <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/${auth.id}">Edit</a></td>
                         <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/${auth.id}" onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
                     </tr>
-                </c:forEach>
-            </table>
-        </form>
-        <div class="pagination justify-content-center">
-            <c:if test="${!authorlistPage.first}">
-                <a href="?page=${authorlistPage.number - 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
-            </c:if>
-                Page ${authorlistPage.number+1} of ${authorlistPage.totalPages}
-            <c:if test="${!authorlistPage.last}">
-                <a href="?page=${authorlistPage.number + 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
-            </c:if>
-        </div>
+                </c:forEach> -->
+            </tbody>
+        </table>
     </div>
+    <div class="pagination justify-content-center mt-3" id="pagination">
+        <!-- <c:if test="${!authorlistPage.first}">
+            <a href="?page=${authorlistPage.number - 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
+        </c:if>
+            Page ${authorlistPage.number+1} of ${authorlistPage.totalPages}
+        <c:if test="${!authorlistPage.last}">
+            <a href="?page=${authorlistPage.number + 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
+        </c:if> -->
+    </div>
+    
+    <script>
+        let currentPage = 0;
+        let pageSize = 5;
+        let keyword = "";
+
+        function loadAuthors(page = 0, keyword = '') {
+            $.ajax({
+                url: "/api/authors",
+                type: "GET",
+                data: { page, size: pageSize, keyword},
+                success: function (data){
+                    const tbody = document.getElementById('authorTableRows');
+                    tbody.innerHTML = '';
+                    console.log(data);
+                    data.content.forEach(author => {
+                        const row = `
+                            <tr>
+                                <td><input type="checkbox" name="authorIds" value="\${author.id}"></td>
+                                <td>\${author.id}</td>
+                                <td>\${author.name}</td>
+                                <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/\${author.id}">Edit</a></td>
+                                <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/\${author.id}"
+                                    onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+
+                    const pagination = document.getElementById('pagination');
+                    pagination.innerHTML = '';
+
+                    if (!data.first) {
+                        let prevBtn = document.createElement("button");
+                        prevBtn.className = "btn btn-dark btn-sm mr-3";
+                        prevBtn.textContent = "Previous";
+                        prevBtn.addEventListener("click", () => loadAuthors(data.number - 1, keyword));
+                        pagination.appendChild(prevBtn);
+                    }
+
+                    let pageInfo = document.createElement("span");
+                    pageInfo.textContent = ` Page \${data.number+1} of \${data.totalPages}`;
+                    pagination.appendChild(pageInfo);
+                    
+
+                    if (!data.last) {
+                        let nextBtn = document.createElement("button");
+                        nextBtn.className = "btn btn-dark btn-sm ml-3";
+                        nextBtn.textContent = "Next";
+                        nextBtn.addEventListener("click", () => loadAuthors(data.number + 1, keyword));
+                        pagination.appendChild(nextBtn);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error fetching authors:", xhr.responseText);
+                }
+            });
+        }
+                    // pagination.innerHTML += ` Page \${data.number + 1} of \${data.totalPages} `;
+                // .catch(error => console.error('Error fetching authors:', error));
+        
+
+        // Load initial authors on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAuthors();
+
+            document.getElementById("searchBar").addEventListener("submit", (e) =>{
+                e.preventDefault();
+                keyword = document.getElementById("keyword").value;
+                loadAuthors(0, keyword);
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>

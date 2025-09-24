@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Author</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -24,19 +25,34 @@
     </div>
     </nav>
     <div class="container text-center py-2">
-        <h1>
+        <h1 id="authorPageTitle">
             <c:choose>
-            <c:when test="${author.id != null}">
-                Update Author
-            </c:when>
-            <c:otherwise>
-                New Author
-            </c:otherwise>
-        </c:choose>
+                <c:when test="${author.id != null}">
+                    Update Author
+                </c:when>
+                <c:otherwise>
+                    New Author
+                </c:otherwise>
+            </c:choose>
         </h1>
     </div>
     <div class="container text-center">
-        <form action="/authors" method="post">
+        <form id="newAuthorForm">
+            <input type="hidden" name="id" value="${author.id}" id="authorId"/>
+            <div class="form-group row">
+                <label for="authorName" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="authorName" placeholder="Name" name="name" value="${author.name}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-dark" id="submitButton">
+                <c:choose>
+                    <c:when test="${author.id != null}">Update</c:when>
+                    <c:otherwise>Add</c:otherwise>
+                </c:choose>
+            </button>
+        </form>
+        <!-- <form action="/authors" method="post">
             <input type="hidden" name="id" value="${author.id}"/>
             <div class="form-group row">
                 <label for="authorName" class="col-sm-2 col-form-label">Name</label>
@@ -44,15 +60,39 @@
                 <input type="text" class="form-control" id="authorName" placeholder="Name" name="name" value="${author.name}" required>
                 </div>
             </div>
-            <button type="submit" class="btn btn-dark">
-                <!-- Add -->
+            <button type="submit" class="btn btn-dark" id="submitButton">
+                 
                 <c:choose>
                     <c:when test="${author.id != null}">Update</c:when>
                     <c:otherwise>Add</c:otherwise>
                 </c:choose>
             </button>
-        </form>
+        </form> -->
     </div>
-    
+    <script>
+        $(function(){
+            $("#newAuthorForm").submit(function (e){
+                e.preventDefault();
+
+                var author = {
+                    id: $("#authorId").val() || null,
+                    name: $("#authorName").val()
+                };
+
+                $.ajax({
+                    url: "/api/authors",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(author),
+                    success: function () {
+                        window.location.href = "/authors";
+                    },
+                    error: function (xhr) {
+                        alert("Error saving author: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

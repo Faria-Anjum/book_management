@@ -28,53 +28,19 @@ public class AuthorController {
     }
 
     @GetMapping
-    public String list(Model model,
-                        @RequestParam(value="keyword", required=false) String keyword,
-                        @RequestParam(defaultValue = "0") int page,
-                        @RequestParam(defaultValue = "5") int items) {
-
-        Page<Author> authorlistPage;
-        
-        if (keyword==null || keyword.isEmpty()){
-            authorlistPage = authorService.getAllAuthors(PageRequest.of(page, items));
-        }
-        else{
-            authorlistPage = authorService.getAllAuthorsByName(PageRequest.of(page, items), keyword);
-        }
-        model.addAttribute("authorlistPage", authorlistPage);
-        model.addAttribute("keyword", keyword);
-
+    public String authorList() {
         return "authors";
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("author", new Author());
+    public String newAuthor() {
         return "author_form";
-    }
-
-    @PostMapping
-    public String save(@ModelAttribute Author author) {
-        authorService.saveAuthor(author);
-        return "redirect:/authors";
     }
 
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editAuthor(@PathVariable Long id, Model model) {
         Author author = authorService.getAuthorById(id);
         model.addAttribute("author", author);
         return "author_form";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        authorService.deleteAuthor(id);
-        return "redirect:/authors";
-    }
-
-    @PostMapping("/delete/bulk")
-    public String bulkDelete(@RequestParam("authorIds") List<Long> ids) {
-        authorService.bulkDeleteAuthors(ids);
-        return "redirect:/authors"; 
     }
 }

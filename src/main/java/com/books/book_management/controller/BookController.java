@@ -44,21 +44,18 @@ public class BookController {
     }
 
     @GetMapping
-    public String list(Model model,
-                    @RequestParam(value="keyword", required = false) String keyword,
-                    @RequestParam(defaultValue = "0") int page,
-                    @RequestParam(defaultValue = "5") int items) {
+    public String list() {
 
-        Page<Book> booklistPage;
+        // Page<Book> booklistPage;
 
-        if (keyword==null || keyword.isEmpty()){
-            booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
-        }
-        else{
-            booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
-        }
-        model.addAttribute("booklistPage", booklistPage);
-        model.addAttribute("keyword", keyword);
+        // if (keyword==null || keyword.isEmpty()){
+        //     booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
+        // }
+        // else{
+        //     booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
+        // }
+        // model.addAttribute("booklistPage", booklistPage);
+        // model.addAttribute("keyword", keyword);
         
         return "books";
     }
