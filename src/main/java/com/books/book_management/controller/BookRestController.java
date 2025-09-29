@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 // import org.springframework.http.HttpStatus;
@@ -45,32 +47,39 @@ public class BookRestController {
         this.authorService = authorService;
     }
     
+    // @GetMapping
+    // public ResponseEntity<Page<Book>> list(
+    //                 @RequestParam(value="keyword", required = false) String keyword,
+    //                 @RequestParam(defaultValue = "0") int page,
+    //                 @RequestParam(defaultValue = "5") int items) {
+
+    //     Page<Book> booklistPage;
+
+    //     if (keyword==null || keyword.isEmpty()){
+    //         booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
+    //     }
+    //     else{
+    //         booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
+    //     }
+    //     return ResponseEntity.ok(booklistPage);
+    // }
+
+    // @GetMapping("/new")
+    // public ResponseEntity<Map<String, Object>> bookForm(){
+    //     // booklist = bookService.getBookById(book.id);
+    //     Map<String, Object> response = new HashMap<>();
+    //     response.put("book", new Book());
+    //     response.put("authors", authorService.getAllAuthors());
+    //     response.put("today", LocalDate.now());
+
+    //     return ResponseEntity.ok(response);
+    // }
+
     @GetMapping
-    public ResponseEntity<Page<Book>> list(
-                    @RequestParam(value="keyword", required = false) String keyword,
-                    @RequestParam(defaultValue = "0") int page,
-                    @RequestParam(defaultValue = "5") int items) {
+    public Map<String, Object> bookTable(HttpServletRequest request){
 
-        Page<Book> booklistPage;
+        
 
-        if (keyword==null || keyword.isEmpty()){
-            booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
-        }
-        else{
-            booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
-        }
-        return ResponseEntity.ok(booklistPage);
-    }
-
-    @GetMapping("/new")
-    public ResponseEntity<Map<String, Object>> bookForm(){
-        // booklist = bookService.getBookById(book.id);
-        Map<String, Object> response = new HashMap<>();
-        response.put("book", new Book());
-        response.put("authors", authorService.getAllAuthors());
-        response.put("today", LocalDate.now());
-
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

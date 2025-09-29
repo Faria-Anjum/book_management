@@ -22,8 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.books.book_management.entity.Author;
 import com.books.book_management.entity.Book;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 // import org.springframework.data.domain.Pageable;
 
 // import com.books.book_management.repository.AuthorRepository;
@@ -45,26 +43,11 @@ public class BookController {
 
     @GetMapping
     public String list() {
-
-        // Page<Book> booklistPage;
-
-        // if (keyword==null || keyword.isEmpty()){
-        //     booklistPage = bookService.getAllBooks(PageRequest.of(page, items));
-        // }
-        // else{
-        //     booklistPage = bookService.getAllBooksByTitleOrAuthor(PageRequest.of(page, items), keyword);
-        // }
-        // model.addAttribute("booklistPage", booklistPage);
-        // model.addAttribute("keyword", keyword);
-        
         return "books";
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
-        model.addAttribute("book", new Book());
-        model.addAttribute("authors", authorService.getAllAuthors());
-        model.addAttribute("today", LocalDate.now());
+    public String form() {
         return "book_form";
     }
 

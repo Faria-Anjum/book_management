@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Author List</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
@@ -25,23 +26,23 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid">
+        <!-- <div class="container-fluid">
             <form id=searchBar class="form-inline">
                 <input id="keyword" name="keyword" class="form-control mr-sm-2" type="search" placeholder="Search by Author Name" aria-label="Search">
                 <button class="btn btn-light my-2 my-sm-0" type="submit">Search</button>
             </form>
-        </div>   
+        </div>    -->
     </nav>
     <div class="container text-center py-2">
         <h1>Authors</h1>
     </div>
     <div class="container text-center my-2 d-flex justify-content-end">
         <a class="btn btn-dark mr-3" href="/authors/new" role="button">Add New</a>
-        <button id="bulkDeleteButton" class="btn btn-dark"
-        onclick="return confirm('Are you sure you want to delete the selected authors?')">Bulk Delete</button>
+        <button id="bulkDeleteButton" class="btn btn-dark">Bulk Delete</button>
+        <!-- onclick="return confirm('Are you sure you want to delete the selected authors?' -->
     </div>
-    <div class="container text-center">
-        <table class="table">
+    <div class="container">
+        <table class="table" id="authorTableRows">
             <thead>
                 <tr>
                     <th scope="col"></th>
@@ -51,103 +52,127 @@
                     <th scope="col">Delete Author</th>
                 </tr>
             </thead>
-            <tbody id="authorTableRows">
-                <!-- <c:forEach var="auth" items="${authorlistPage.content}">
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="authorIds" value="${auth.id}">
-                        </td>
-                        <td>${auth.id}</td>
-                        <td>${auth.name}</td>
-                        <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/${auth.id}">Edit</a></td>
-                        <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/${auth.id}" onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
-                    </tr>
-                </c:forEach> -->
-            </tbody>
+             
         </table>
     </div>
     <div class="pagination justify-content-center mt-3" id="pagination">
-        <!-- <c:if test="${!authorlistPage.first}">
-            <a href="?page=${authorlistPage.number - 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm mr-3">Previous</a>
-        </c:if>
-            Page ${authorlistPage.number+1} of ${authorlistPage.totalPages}
-        <c:if test="${!authorlistPage.last}">
-            <a href="?page=${authorlistPage.number + 1}&size=${authorlistPage.size}&keyword=${keyword}" class="btn btn-dark btn-sm ml-3">Next</a>
-        </c:if> -->
+
     </div>
     
     <script>
-        let currentPage = 0;
-        let pageSize = 5;
-        let keyword = "";
-
-        function loadAuthors(page = 0, keyword = '') {
-            $.ajax({
-                url: "/api/authors",
-                type: "GET",
-                data: { page, size: pageSize, keyword},
-                success: function (data){
-                    const tbody = document.getElementById('authorTableRows');
-                    tbody.innerHTML = '';
-                    console.log(data);
-                    data.content.forEach(author => {
-                        const row = `
-                            <tr>
-                                <td><input type="checkbox" name="authorIds" value="\${author.id}"></td>
-                                <td>\${author.id}</td>
-                                <td>\${author.name}</td>
-                                <td><a class="btn btn-dark btn-sm" role="button" href="/authors/edit/\${author.id}">Edit</a></td>
-                                <td><a class="btn btn-dark btn-sm" role="button" href="/authors/delete/\${author.id}"
-                                    onclick="return confirm('Are you sure you want to delete this author?')">Delete</a></td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += row;
-                    });
-
-                    const pagination = document.getElementById('pagination');
-                    pagination.innerHTML = '';
-
-                    if (!data.first) {
-                        let prevBtn = document.createElement("button");
-                        prevBtn.className = "btn btn-dark btn-sm mr-3";
-                        prevBtn.textContent = "Previous";
-                        prevBtn.addEventListener("click", () => loadAuthors(data.number - 1, keyword));
-                        pagination.appendChild(prevBtn);
+        $(document).ready(function () {
+            const table = $('#authorTableRows').DataTable({
+                order: [[3, 'desc']],
+                serverSide: true,   
+                ajax: {
+                    url: '/api/authors',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            checkbox = '<input type="checkbox" class="id-checkbox" value="'+data+'">';
+                            return checkbox;
+                        },
+                        orderable: false
+                    },
+                    { data: 'id'},
+                    { data: 'name'},
+                    {
+                        data: 'id',
+                        render: function (data) {
+                            editButton = '<a class="btn btn-dark btn-sm edit-btn text-white" data-id="'+data+'">Edit</a>';
+                            return editButton;
+                        },
+                        orderable: false
+                    },
+                    {
+                        data: 'id',
+                        render: function (data, type, row) {
+                        // console.log('Row object:', row, type);
+                        // console.log('Data for id:', data);
+                            deleteButton = '<a class="btn btn-dark btn-sm delete-btn text-white" data-id="'+data+'">Delete</a>';
+                            return deleteButton;
+                        },
+                        orderable: false
                     }
-
-                    let pageInfo = document.createElement("span");
-                    pageInfo.textContent = ` Page \${data.number+1} of \${data.totalPages}`;
-                    pagination.appendChild(pageInfo);
-                    
-
-                    if (!data.last) {
-                        let nextBtn = document.createElement("button");
-                        nextBtn.className = "btn btn-dark btn-sm ml-3";
-                        nextBtn.textContent = "Next";
-                        nextBtn.addEventListener("click", () => loadAuthors(data.number + 1, keyword));
-                        pagination.appendChild(nextBtn);
+                ],
+                layout: {
+                    topStart: {
+                        pageLength: {
+                            menu: [5, 10, 20, 50]
+                        }
                     }
                 },
-                error: function (xhr) {
-                    console.error("Error fetching authors:", xhr.responseText);
+                paging: true,
+                pageLength: 5,
+                searching: true
+            });
+
+            $('#authorTableRows').on('click', '.delete-btn', function () {
+                let id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this author?')) {
+                    $.ajax({
+                        url: '/api/authors/delete/'+id,
+                        type: 'GET',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
                 }
             });
-        }
-                    // pagination.innerHTML += ` Page \${data.number + 1} of \${data.totalPages} `;
-                // .catch(error => console.error('Error fetching authors:', error));
-        
 
-        // Load initial authors on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            loadAuthors();
-
-            document.getElementById("searchBar").addEventListener("submit", (e) =>{
-                e.preventDefault();
-                keyword = document.getElementById("keyword").value;
-                loadAuthors(0, keyword);
+            $('#authorTableRows').on('click', '.edit-btn', function(){
+                let id = $(this).data('id');
+                window.location.href = '/authors/new?id='+id;
             });
+
+            $('#bulkDeleteButton').on('click', function(){
+                let ids = [];
+                $('.id-checkbox:checked').each(function(){
+                    ids.push($(this).val());
+                });
+
+                if (ids.length==0){
+                    alert('Please select authors to bulk delete');
+                    return;
+                }
+                if(confirm('Are you sure you want to delete the selected authors?')){
+                    $.ajax({
+                        url: '/api/authors/bulk',
+                        data: JSON.stringify(ids),
+                        contentType: "application/json",
+                        type: 'POST',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            })
+            
+
+            // $('#bulkDeleteButton').on('click', function () {
+            //     const ids = [];
+            //     $('.id-checkbox:checked').each(function () {
+            //         ids.push($(this).val());
+            //     });
+
+            //     if (ids.length === 0) {
+            //         alert('No authors selected.');
+            //         return;
+            //     }
+
+            //     if (confirm('Delete selected authors?')) {
+            //         $.delete('/api/authors/bulk', { authorIds: ids }, function () {
+            //             table.ajax.reload();
+            //         });
+            //     }
+            // });
         });
     </script>
+
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -26,14 +26,7 @@
     </nav>
     <div class="container text-center py-2">
         <h1 id="authorPageTitle">
-            <c:choose>
-                <c:when test="${author.id != null}">
-                    Update Author
-                </c:when>
-                <c:otherwise>
-                    New Author
-                </c:otherwise>
-            </c:choose>
+            
         </h1>
     </div>
     <div class="container text-center">
@@ -71,10 +64,20 @@
     </div>
     <script>
         $(function(){
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+
+            if (id){
+                $.get('/api/authors/'+id, function(author){
+                    $('#authorId').val(author.id);
+                    $('#authorName').val(author.name);
+                })
+            }
+
             $("#newAuthorForm").submit(function (e){
                 e.preventDefault();
 
-                var author = {
+                let author = {
                     id: $("#authorId").val() || null,
                     name: $("#authorName").val()
                 };
