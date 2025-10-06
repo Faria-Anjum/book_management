@@ -150,25 +150,6 @@
                     });
                 }
             })
-            
-
-            // $('#bulkDeleteButton').on('click', function () {
-            //     const ids = [];
-            //     $('.id-checkbox:checked').each(function () {
-            //         ids.push($(this).val());
-            //     });
-
-            //     if (ids.length === 0) {
-            //         alert('No authors selected.');
-            //         return;
-            //     }
-
-            //     if (confirm('Delete selected authors?')) {
-            //         $.delete('/api/authors/bulk', { authorIds: ids }, function () {
-            //             table.ajax.reload();
-            //         });
-            //     }
-            // });
         });
     </script>
 

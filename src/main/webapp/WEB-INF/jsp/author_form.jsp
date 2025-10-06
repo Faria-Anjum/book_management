@@ -26,7 +26,7 @@
     </nav>
     <div class="container text-center py-2">
         <h1 id="authorPageTitle">
-            
+            New Author
         </h1>
     </div>
     <div class="container text-center">
@@ -39,35 +39,22 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-dark" id="submitButton">
-                <c:choose>
-                    <c:when test="${author.id != null}">Update</c:when>
-                    <c:otherwise>Add</c:otherwise>
-                </c:choose>
+                Add
             </button>
         </form>
-        <!-- <form action="/authors" method="post">
-            <input type="hidden" name="id" value="${author.id}"/>
-            <div class="form-group row">
-                <label for="authorName" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="authorName" placeholder="Name" name="name" value="${author.name}" required>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-dark" id="submitButton">
-                 
-                <c:choose>
-                    <c:when test="${author.id != null}">Update</c:when>
-                    <c:otherwise>Add</c:otherwise>
-                </c:choose>
-            </button>
-        </form> -->
     </div>
+
     <script>
         $(function(){
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id");
 
             if (id){
+
+                $("#authorPageTitle").text("Update Author");
+
+                $("#submitButton").text("Update");
+
                 $.get('/api/authors/'+id, function(author){
                     $('#authorId').val(author.id);
                     $('#authorName').val(author.name);

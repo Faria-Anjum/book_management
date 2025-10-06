@@ -31,64 +31,6 @@ public class AuthorRestController {
         this.authorService = authorService;
     }
 
-    // @GetMapping
-    // public ResponseEntity<Page<Author>> list(@RequestParam(value="keyword", required=false) String keyword,
-    //                     @RequestParam(defaultValue = "0") int page,
-    //                     @RequestParam(defaultValue = "5") int items) {
-
-    //     Page<Author> authorlistPage;
-        
-    //     if (keyword==null || keyword.isEmpty()){
-    //         authorlistPage = authorService.getAllAuthors(PageRequest.of(page, items));
-    //     }
-    //     else{
-    //         authorlistPage = authorService.getAllAuthorsByName(PageRequest.of(page, items), keyword);
-    //     }
-
-    //     return ResponseEntity.ok(authorlistPage);
-    // }
-
-    // @GetMapping
-    // public Map<String, Object> authorTable(@RequestParam(name = "start", defaultValue = "0") int start,
-    //                                         @RequestParam(name = "length", defaultValue = "10") int length,
-    //                                         @RequestParam(name = "search[value]", defaultValue = "") String search,
-    //                                         @RequestParam(name = "order[0][column]", required = false) Integer orderColumn,
-    //                                         @RequestParam(name = "order[0][dir]", required = false) String orderDir,
-    //                                         @RequestParam Map<String, String> requestParams){
-
-    //     int page = start / length;
-
-    //     String sortColumn = "id";
-    //     if (orderColumn != null) {
-    //         sortColumn = requestParams.get("columns[" + orderColumn + "][data]");
-    //     }
-
-    //     Sort.Direction direction;
-    //     if ("desc".equalsIgnoreCase(orderDir)) {
-    //         direction = Sort.Direction.DESC;
-    //     } else {
-    //         direction = Sort.Direction.ASC;
-    //     }
-    //     // = "desc".equalsIgnoreCase(orderDir) ? Sort.Direction.DESC : Sort.Direction.ASC;
-    //     PageRequest pageRequest = PageRequest.of(page, length, Sort.by(direction, sortColumn));
-
-    //     Page<Author> authorTablePage;
-
-    //     if (search.isEmpty()){
-    //         authorTablePage = authorService.getAllAuthors(pageRequest);
-    //     }
-    //     else{
-    //         authorTablePage = authorService.getAllAuthorsByName(pageRequest, search);
-    //     }
-
-    //     Map<String, Object> response = new HashMap<>();
-    //     response.put("data", authorTablePage.getContent());
-    //     response.put("recordsTotal", authorTablePage.getTotalElements());
-    //     response.put("recordsFiltered", authorTablePage.getTotalElements());
-
-    //     return response;
-    // }
-
     @GetMapping
     public Map<String, Object> authorTable(HttpServletRequest request){
 
@@ -139,10 +81,15 @@ public class AuthorRestController {
         return response;
     }
 
+    @GetMapping("/list")
+    public List<Author> authorList() {
+        return authorService.getAllAuthors();
+    }
+
     @PostMapping
-    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
-        Author newAuthor = authorService.saveAuthor(author);
-        return ResponseEntity.ok(newAuthor);
+    public ResponseEntity<String> saveAuthor(@RequestBody Author author) {
+        authorService.saveAuthor(author);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
@@ -152,13 +99,13 @@ public class AuthorRestController {
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteAuthorsById(@PathVariable Long id) {
         authorService.deleteAuthor(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<String> bulkDelete(@RequestBody List<Long> ids) { //grabbing the playload sent by ajax
+    public ResponseEntity<String> bulkDeleteAuthors(@RequestBody List<Long> ids) { //grabbing the payload sent by ajax
         authorService.bulkDeleteAuthors(ids);
         return ResponseEntity.noContent().build();
     }
